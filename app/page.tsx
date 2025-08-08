@@ -5,13 +5,13 @@ import { Button } from "@/components/ui/button"
 import { Progress } from "@/components/ui/progress"
 import { Badge } from "@/components/ui/badge"
 import { Card, CardContent } from "@/components/ui/card"
-import { Brain, Moon, Zap, Trophy, RotateCcw, Play, AlertTriangle, Sparkles, Star } from 'lucide-react'
+import { Brain, Trophy, RotateCcw, Play, AlertTriangle, Sparkles, Zap, Star } from 'lucide-react'
 
 interface Task {
   id: number
   title: string
   description: string
-  type: 'button' | 'click' | 'drag' | 'wait' | 'type' | 'multiple'
+  type: 'button' | 'click' | 'drag' | 'wait' | 'multiple' | 'special'
   completed: boolean
 }
 
@@ -50,22 +50,65 @@ const INITIAL_TASKS: Task[] = [
     description: "Click the button to repeat the affirmation",
     type: 'click',
     completed: false
+  },
+  {
+    id: 6,
+    title: "The Forbidden Red Button",
+    description: "There's a big red button. You know what NOT to do...",
+    type: 'button',
+    completed: false
+  },
+  {
+    id: 7,
+    title: "Click Anywhere 100 Times",
+    description: "Click anywhere on the screen 100 times for absolutely no reason",
+    type: 'special',
+    completed: false
+  },
+  {
+    id: 8,
+    title: "Drag the Moon Into the Blender",
+    description: "Make a cosmic smoothie by dragging the moon into the blender",
+    type: 'drag',
+    completed: false
+  },
+  {
+    id: 9,
+    title: "Type 'SMART' Backwards",
+    description: "Type 'SMART' backwards while hopping on one foot (we can't see you, but we trust you're hopping)",
+    type: 'multiple',
+    completed: false
+  },
+  {
+    id: 10,
+    title: "Solve This Impossible Math",
+    description: "What's 2 + 2 when you're not thinking about elephants?",
+    type: 'multiple',
+    completed: false
   }
 ]
 
 const BADGES = [
   "Certified Toast Technician",
-  "Sheep Whisperer (Invisible Edition)",
+  "Sheep Whisperer (Invisible Edition)", 
   "Dot Starer Pro Max",
   "Creative Denier",
-  "Affirmation Overlord"
+  "Affirmation Overlord",
+  "Button Rebel Supreme",
+  "Pointless Clicker Master",
+  "Cosmic Smoothie Chef",
+  "Backwards Genius",
+  "Elephant-Free Mathematician"
 ]
 
 const SHEEP_OPTIONS = ["0", "5", "42", "Banana"]
 const OBJECT_OPTIONS = ["Supercomputer", "Brain Booster 3000", "It's a sock, bro", "CEO of Intelligence"]
+const BACKWARDS_OPTIONS = ["TRAMS", "SMART", "TRMAS", "POTATO"]
+const MATH_OPTIONS = ["4", "Purple", "Elephant", "Yes"]
+
 const AFFIRMATIONS = [
   "I am smart.",
-  "I am totally smart.",
+  "I am totally smart.", 
   "I'm the smartest potato alive.",
   "My brain is 99% water and 1% luck.",
   "I forgot why I'm clicking this."
@@ -76,7 +119,12 @@ const TASK_MESSAGES = [
   "Correct! You clearly operate on a different level. IQ -10.",
   "You just wasted 10 seconds and several brain cells. Congratulations.",
   "Correct! You ignored reality. That's the spirit.",
-  "Repetition is the first sign of smooth brain."
+  "Repetition is the first sign of smooth brain.",
+  "You pressed the forbidden button! Your rebellion is noted. IQ -10.",
+  "100 pointless clicks completed! Your dedication to meaninglessness is admirable. IQ -10.",
+  "Cosmic smoothie created! The moon never saw it coming. IQ -10.",
+  "Backwards typing mastered! Your brain is officially confused. IQ -10.",
+  "Math solved incorrectly! You successfully avoided thinking about elephants. IQ -10."
 ]
 
 export default function IQDecreaser() {
@@ -87,7 +135,6 @@ export default function IQDecreaser() {
   const [earnedBadges, setEarnedBadges] = useState<string[]>([])
   const [clickCount, setClickCount] = useState(0)
   const [waitTimer, setWaitTimer] = useState(10)
-  const [typedText, setTypedText] = useState("")
   const [showCheater, setShowCheater] = useState(false)
   const [showSuccess, setShowSuccess] = useState(false)
   const [brainAnimation, setBrainAnimation] = useState("")
@@ -95,6 +142,7 @@ export default function IQDecreaser() {
   const [repeatCount, setRepeatCount] = useState(0)
   const [currentAffirmation, setCurrentAffirmation] = useState("I am smart.")
   const [showExplosion, setShowExplosion] = useState(false)
+  const [screenShake, setScreenShake] = useState(false)
 
   const currentTask = tasks[currentTaskIndex]
 
@@ -128,6 +176,10 @@ export default function IQDecreaser() {
     setEarnedBadges(prev => [...prev, BADGES[currentTaskIndex]])
     setShowSuccess(true)
     
+    // Screen shake effect for dramatic completion
+    setScreenShake(true)
+    setTimeout(() => setScreenShake(false), 1000)
+    
     setTimeout(() => {
       setShowSuccess(false)
       if (currentTaskIndex < tasks.length - 1) {
@@ -151,7 +203,6 @@ export default function IQDecreaser() {
   const resetTaskState = () => {
     setClickCount(0)
     setWaitTimer(10)
-    setTypedText("")
     setSelectedAnswer("")
     setRepeatCount(0)
     setCurrentAffirmation("I am smart.")
@@ -169,8 +220,8 @@ export default function IQDecreaser() {
     setShowSuccess(false)
   }
 
-  const handleTaskClick = () => {
-    if (currentTask?.type === 'click') {
+  const handleScreenClick = () => {
+    if (currentTask?.type === 'special' && currentTask.id === 7) {
       const newCount = clickCount + 1
       setClickCount(newCount)
       if (newCount >= 100) {
@@ -179,52 +230,25 @@ export default function IQDecreaser() {
     }
   }
 
-  const handleForbiddenButton = () => {
-    setBrainAnimation("animate-pulse")
-    setTimeout(() => setBrainAnimation(""), 1000)
-    completeTask()
-  }
-
-  const handleDragStart = (e: React.DragEvent) => {
-    e.dataTransfer.setData("text/plain", "moon")
-  }
-
-  const handleDrop = (e: React.DragEvent) => {
-    e.preventDefault()
-    const data = e.dataTransfer.getData("text/plain")
-    if (data === "moon") {
-      completeTask()
-    }
-  }
-
-  const handleDragOver = (e: React.DragEvent) => {
-    e.preventDefault()
-  }
-
-  const handleTyping = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const value = e.target.value.toUpperCase()
-    setTypedText(value)
-    if (value === "TRAMS") {
-      completeTask()
-    }
-  }
-
-  const handleToastDrop = (e: React.DragEvent) => {
-    e.preventDefault()
-    const data = e.dataTransfer.getData("text/plain")
-    if (data === "toast") {
-      setShowExplosion(true)
-      setTimeout(() => {
-        setShowExplosion(false)
-        completeTask()
-      }, 2000)
-    }
-  }
-
   const handleMultipleChoice = (answer: string) => {
     setSelectedAnswer(answer)
-    const isCorrect = (currentTaskIndex === 1 && answer === "Banana") || 
-                     (currentTaskIndex === 3 && answer !== "It's a sock, bro")
+    let isCorrect = false
+    
+    switch (currentTask?.id) {
+      case 2: // Invisible sheep
+        isCorrect = answer === "Banana"
+        break
+      case 4: // Name the object
+        isCorrect = answer !== "It's a sock, bro"
+        break
+      case 9: // Backwards typing
+        isCorrect = answer === "TRAMS"
+        break
+      case 10: // Math problem
+        isCorrect = answer !== "4" // Any answer except the correct one
+        break
+    }
+    
     if (isCorrect) {
       setTimeout(() => completeTask(), 1000)
     }
@@ -241,8 +265,42 @@ export default function IQDecreaser() {
     }
   }
 
-  const handleToastDragStart = (e: React.DragEvent) => {
-    e.dataTransfer.setData("text/plain", "toast")
+  const handleToastDrop = (e: React.DragEvent) => {
+    e.preventDefault()
+    const data = e.dataTransfer.getData("text/plain")
+    if (data === "toast") {
+      setShowExplosion(true)
+      setTimeout(() => {
+        setShowExplosion(false)
+        completeTask()
+      }, 2000)
+    }
+  }
+
+  const handleMoonDrop = (e: React.DragEvent) => {
+    e.preventDefault()
+    const data = e.dataTransfer.getData("text/plain")
+    if (data === "moon") {
+      completeTask()
+    }
+  }
+
+  const handleDragStart = (item: string) => (e: React.DragEvent) => {
+    e.dataTransfer.setData("text/plain", item)
+  }
+
+  const handleDragOver = (e: React.DragEvent) => {
+    e.preventDefault()
+  }
+
+  const handleForbiddenButton = () => {
+    setBrainAnimation("animate-pulse")
+    setScreenShake(true)
+    setTimeout(() => {
+      setBrainAnimation("")
+      setScreenShake(false)
+      completeTask()
+    }, 1000)
   }
 
   if (!gameStarted) {
@@ -253,6 +311,8 @@ export default function IQDecreaser() {
         <div className="absolute top-20 right-20 text-3xl animate-pulse">🎈</div>
         <div className="absolute bottom-20 left-20 text-5xl animate-spin">🎪</div>
         <div className="absolute bottom-10 right-10 text-4xl animate-bounce">🎭</div>
+        <div className="absolute top-1/3 left-1/4 text-2xl animate-ping">✨</div>
+        <div className="absolute bottom-1/3 right-1/4 text-3xl animate-pulse">🎨</div>
         
         <div className="text-center space-y-8 max-w-2xl relative z-10">
           <div className="space-y-6">
@@ -300,7 +360,7 @@ export default function IQDecreaser() {
 
   if (showSuccess) {
     return (
-      <div className="min-h-screen bg-gradient-to-br from-green-400 via-blue-400 to-purple-500 flex flex-col items-center justify-center p-4 relative overflow-hidden">
+      <div className={`min-h-screen bg-gradient-to-br from-green-400 via-blue-400 to-purple-500 flex flex-col items-center justify-center p-4 relative overflow-hidden ${screenShake ? 'animate-pulse' : ''}`}>
         {/* Confetti elements */}
         <div className="absolute top-10 left-10 text-4xl animate-bounce">🎉</div>
         <div className="absolute top-20 right-20 text-3xl animate-spin">🎊</div>
@@ -308,6 +368,8 @@ export default function IQDecreaser() {
         <div className="absolute bottom-10 right-10 text-4xl animate-bounce">✨</div>
         <div className="absolute top-1/2 left-10 text-3xl animate-ping">💫</div>
         <div className="absolute top-1/3 right-10 text-4xl animate-spin">🎈</div>
+        <div className="absolute bottom-1/3 left-1/4 text-2xl animate-bounce">🎭</div>
+        <div className="absolute top-1/4 right-1/3 text-3xl animate-pulse">🎪</div>
         
         <div className="text-center space-y-8 relative z-10">
           <div className="relative">
@@ -353,6 +415,8 @@ export default function IQDecreaser() {
         <div className="absolute top-20 right-20 text-3xl animate-spin">🚨</div>
         <div className="absolute bottom-20 left-20 text-5xl animate-pulse">❌</div>
         <div className="absolute bottom-10 right-10 text-4xl animate-bounce">💀</div>
+        <div className="absolute top-1/3 left-1/4 text-3xl animate-ping">🔥</div>
+        <div className="absolute bottom-1/3 right-1/4 text-4xl animate-spin">💥</div>
         
         <div className="text-center space-y-8 relative z-10">
           <div className="relative">
@@ -386,6 +450,8 @@ export default function IQDecreaser() {
         <div className="absolute top-20 right-20 text-3xl animate-spin">🏆</div>
         <div className="absolute bottom-20 left-20 text-5xl animate-pulse">🎉</div>
         <div className="absolute bottom-10 right-10 text-4xl animate-bounce">⭐</div>
+        <div className="absolute top-1/3 left-1/4 text-3xl animate-ping">👑</div>
+        <div className="absolute bottom-1/3 right-1/4 text-4xl animate-spin">🎯</div>
         
         <div className="text-center space-y-8 relative z-10">
           <div className="relative">
@@ -412,7 +478,7 @@ export default function IQDecreaser() {
                style={{ fontFamily: 'Comic Sans MS, cursive' }}>
               Final IQ Score: {iqScore} 🎯
             </p>
-            <div className="flex flex-wrap gap-3 justify-center">
+            <div className="flex flex-wrap gap-3 justify-center max-h-40 overflow-y-auto">
               {earnedBadges.map((badge, index) => (
                 <div key={index} className="bg-yellow-300 text-purple-800 px-4 py-2 rounded-full border-4 border-purple-600 font-black transform rotate-1 animate-pulse">
                   🏅 {badge}
@@ -436,14 +502,16 @@ export default function IQDecreaser() {
 
   return (
     <div 
-      className="min-h-screen bg-gradient-to-br from-blue-400 via-green-400 to-yellow-400 p-4 relative overflow-hidden"
-      onClick={handleTaskClick}
+      className={`min-h-screen bg-gradient-to-br from-blue-400 via-green-400 to-yellow-400 p-4 relative overflow-hidden ${screenShake ? 'animate-pulse' : ''}`}
+      onClick={handleScreenClick}
     >
       {/* Floating cartoon elements */}
       <div className="absolute top-5 left-5 text-3xl animate-bounce">🎈</div>
       <div className="absolute top-10 right-10 text-2xl animate-spin">⭐</div>
       <div className="absolute bottom-5 left-5 text-4xl animate-pulse">🎪</div>
       <div className="absolute bottom-10 right-5 text-3xl animate-bounce">🎭</div>
+      <div className="absolute top-1/4 left-1/3 text-2xl animate-ping">✨</div>
+      <div className="absolute bottom-1/4 right-1/3 text-3xl animate-spin">🌟</div>
       
       {/* Header */}
       <div className="max-w-4xl mx-auto mb-8 relative z-10">
@@ -466,14 +534,25 @@ export default function IQDecreaser() {
             </div>
           </div>
           
-          {/* Badges */}
-          <div className="flex flex-wrap gap-3 mb-4">
-            {earnedBadges.map((badge, index) => (
-              <div key={index} className="bg-gradient-to-r from-yellow-300 to-orange-300 text-purple-800 px-4 py-2 rounded-full border-4 border-purple-600 font-black animate-pulse shadow-xl transform rotate-1">
-                <Trophy className="w-5 h-5 mr-2 inline" />
-                🏅 {badge}
-              </div>
-            ))}
+          {/* Badges Trophy Shelf */}
+          <div className="bg-gradient-to-r from-yellow-200 to-orange-200 rounded-2xl p-4 border-4 border-orange-400 transform rotate-1 mb-4">
+            <h3 className="text-lg font-black text-orange-800 mb-2" style={{ fontFamily: 'Comic Sans MS, cursive' }}>
+              🏆 Trophy Shelf of Stupidity 🏆
+            </h3>
+            <div className="flex flex-wrap gap-3">
+              {earnedBadges.length === 0 ? (
+                <p className="text-orange-700 font-bold" style={{ fontFamily: 'Comic Sans MS, cursive' }}>
+                  No badges yet... Start getting dumber! 🤪
+                </p>
+              ) : (
+                earnedBadges.map((badge, index) => (
+                  <div key={index} className="bg-gradient-to-r from-yellow-300 to-orange-300 text-purple-800 px-4 py-2 rounded-full border-4 border-purple-600 font-black animate-pulse shadow-xl transform rotate-1">
+                    <Trophy className="w-5 h-5 mr-2 inline" />
+                    🏅 {badge}
+                  </div>
+                ))
+              )}
+            </div>
           </div>
         </div>
       </div>
@@ -503,7 +582,7 @@ export default function IQDecreaser() {
               {/* Task-specific content */}
               <div className="space-y-6">
                 {/* Task 1: Toast and Bathtub */}
-                {currentTask?.type === 'drag' && currentTaskIndex === 0 && (
+                {currentTask?.type === 'drag' && currentTask.id === 1 && (
                   <div className="space-y-6">
                     {showExplosion && (
                       <div className="text-9xl animate-ping">💥⚡💥</div>
@@ -519,7 +598,7 @@ export default function IQDecreaser() {
                         <div 
                           className="text-8xl cursor-move animate-bounce hover:animate-spin"
                           draggable
-                          onDragStart={handleToastDragStart}
+                          onDragStart={handleDragStart("toast")}
                         >
                           🍞
                         </div>
@@ -545,7 +624,7 @@ export default function IQDecreaser() {
                 )}
 
                 {/* Task 2: Invisible Sheep */}
-                {currentTask?.type === 'multiple' && currentTaskIndex === 1 && (
+                {currentTask?.type === 'multiple' && currentTask.id === 2 && (
                   <div className="space-y-6">
                     <div className="bg-green-200 p-8 rounded-2xl border-4 border-green-600 transform rotate-1">
                       <p className="text-xl font-bold text-green-800 mb-4"
@@ -579,7 +658,7 @@ export default function IQDecreaser() {
                 )}
 
                 {/* Task 3: Dot Staring */}
-                {currentTask?.type === 'wait' && currentTaskIndex === 2 && (
+                {currentTask?.type === 'wait' && currentTask.id === 3 && (
                   <div className="space-y-6">
                     <div className="bg-black p-16 rounded-2xl border-8 border-purple-600 transform -rotate-1">
                       <div className="w-6 h-6 bg-red-500 rounded-full mx-auto animate-pulse shadow-2xl"></div>
@@ -600,7 +679,7 @@ export default function IQDecreaser() {
                 )}
 
                 {/* Task 4: Name the Object */}
-                {currentTask?.type === 'multiple' && currentTaskIndex === 3 && (
+                {currentTask?.type === 'multiple' && currentTask.id === 4 && (
                   <div className="space-y-6">
                     <div className="bg-yellow-200 rounded-2xl p-6 border-4 border-yellow-600 transform rotate-1">
                       <div className="text-9xl animate-bounce">🧦</div>
@@ -631,7 +710,7 @@ export default function IQDecreaser() {
                 )}
 
                 {/* Task 5: Affirmations */}
-                {currentTask?.type === 'click' && currentTaskIndex === 4 && (
+                {currentTask?.type === 'click' && currentTask.id === 5 && (
                   <div className="space-y-6">
                     <div className="bg-pink-200 p-6 rounded-2xl border-4 border-pink-600 transform rotate-1">
                       <p className="text-3xl font-black text-pink-800 animate-pulse"
@@ -654,6 +733,140 @@ export default function IQDecreaser() {
                         </p>
                       </div>
                     )}
+                  </div>
+                )}
+
+                {/* Task 6: Forbidden Button */}
+                {currentTask?.type === 'button' && currentTask.id === 6 && (
+                  <div className="space-y-6">
+                    <div className="bg-red-300 rounded-2xl p-4 border-4 border-red-600 transform -rotate-1 animate-pulse">
+                      <p className="text-2xl font-black text-red-700"
+                         style={{ fontFamily: 'Comic Sans MS, cursive' }}>
+                        ⚠️ WHATEVER YOU DO, DON'T PRESS THIS BUTTON! ⚠️
+                      </p>
+                    </div>
+                    <Button
+                      onClick={handleForbiddenButton}
+                      className="text-3xl px-16 py-8 bg-red-600 hover:bg-red-700 text-white font-black rounded-full border-8 border-white/50 animate-pulse transform hover:scale-110 transition-all duration-300 shadow-2xl"
+                      style={{ fontFamily: 'Comic Sans MS, cursive' }}
+                    >
+                      🚫 DO NOT PRESS! 🚫
+                    </Button>
+                  </div>
+                )}
+
+                {/* Task 7: Click Anywhere */}
+                {currentTask?.type === 'special' && currentTask.id === 7 && (
+                  <div className="space-y-6">
+                    <div className="bg-orange-300 rounded-2xl p-6 border-4 border-orange-600 transform rotate-1">
+                      <div className="text-8xl animate-bounce mb-4">👆</div>
+                      <p className="text-3xl font-black text-orange-800"
+                         style={{ fontFamily: 'Comic Sans MS, cursive' }}>
+                        Clicks: {clickCount}/100
+                      </p>
+                    </div>
+                    <div className="bg-yellow-300 rounded-2xl p-4 border-4 border-yellow-600 transform -rotate-1">
+                      <p className="text-xl font-bold text-yellow-800"
+                         style={{ fontFamily: 'Comic Sans MS, cursive' }}>
+                        Click ANYWHERE on the screen! Go crazy! 🎯
+                      </p>
+                    </div>
+                  </div>
+                )}
+
+                {/* Task 8: Moon and Blender */}
+                {currentTask?.type === 'drag' && currentTask.id === 8 && (
+                  <div className="space-y-6">
+                    <div className="bg-purple-300 rounded-2xl p-4 border-4 border-purple-600 transform rotate-1">
+                      <p className="text-2xl font-bold text-purple-800"
+                         style={{ fontFamily: 'Comic Sans MS, cursive' }}>
+                        Time to make a cosmic smoothie! 🌙➡️🥤
+                      </p>
+                    </div>
+                    <div className="flex justify-center items-center gap-12">
+                      <div className="text-center bg-blue-200 rounded-2xl p-4 border-4 border-blue-600 transform rotate-2">
+                        <div 
+                          className="text-8xl cursor-move animate-bounce hover:animate-spin"
+                          draggable
+                          onDragStart={handleDragStart("moon")}
+                        >
+                          🌙
+                        </div>
+                        <p className="text-lg font-black text-blue-800 mt-2"
+                           style={{ fontFamily: 'Comic Sans MS, cursive' }}>
+                          Moon (Drag me!) 🎯
+                        </p>
+                      </div>
+                      <div className="text-6xl animate-pulse">→</div>
+                      <div
+                        className="text-center bg-gray-200 rounded-2xl p-4 border-4 border-gray-600 transform -rotate-2"
+                        onDrop={handleMoonDrop}
+                        onDragOver={handleDragOver}
+                      >
+                        <Zap className="w-16 h-16 mx-auto text-gray-600 animate-bounce" />
+                        <p className="text-lg font-black text-gray-800 mt-2"
+                           style={{ fontFamily: 'Comic Sans MS, cursive' }}>
+                          Blender (Drop here!) ⚡
+                        </p>
+                      </div>
+                    </div>
+                  </div>
+                )}
+
+                {/* Task 9: Backwards Typing */}
+                {currentTask?.type === 'multiple' && currentTask.id === 9 && (
+                  <div className="space-y-6">
+                    <div className="bg-cyan-300 rounded-2xl p-6 border-4 border-cyan-600 transform rotate-1">
+                      <p className="text-2xl font-bold text-cyan-800 mb-4"
+                         style={{ fontFamily: 'Comic Sans MS, cursive' }}>
+                        Type "SMART" backwards (while hopping on one foot): 🦶
+                      </p>
+                    </div>
+                    <div className="grid grid-cols-2 gap-4">
+                      {BACKWARDS_OPTIONS.map((option) => (
+                        <Button
+                          key={option}
+                          onClick={() => handleMultipleChoice(option)}
+                          className={`text-2xl py-6 font-black rounded-2xl border-4 transform hover:scale-105 transition-all duration-300 ${
+                            selectedAnswer === option 
+                              ? 'bg-yellow-400 text-purple-800 border-purple-600 animate-bounce' 
+                              : 'bg-gradient-to-r from-cyan-500 to-blue-500 hover:from-cyan-600 hover:to-blue-600 text-white border-white/50'
+                          }`}
+                          style={{ fontFamily: 'Comic Sans MS, cursive' }}
+                        >
+                          {option} 🤸
+                        </Button>
+                      ))}
+                    </div>
+                  </div>
+                )}
+
+                {/* Task 10: Impossible Math */}
+                {currentTask?.type === 'multiple' && currentTask.id === 10 && (
+                  <div className="space-y-6">
+                    <div className="bg-pink-300 rounded-2xl p-6 border-4 border-pink-600 transform rotate-1">
+                      <p className="text-3xl font-bold text-pink-800 mb-4"
+                         style={{ fontFamily: 'Comic Sans MS, cursive' }}>
+                        What's 2 + 2 when you're NOT thinking about elephants? 🐘
+                      </p>
+                      <div className="text-6xl animate-bounce">🤔</div>
+                    </div>
+                    <div className="grid grid-cols-2 gap-4">
+                      {MATH_OPTIONS.map((option) => (
+                        <Button
+                          key={option}
+                          onClick={() => handleMultipleChoice(option)}
+                          className={`text-2xl py-6 font-black rounded-2xl border-4 transform hover:scale-105 transition-all duration-300 ${
+                            selectedAnswer === option 
+                              ? 'bg-yellow-400 text-purple-800 border-purple-600 animate-bounce' 
+                              : 'bg-gradient-to-r from-pink-500 to-red-500 hover:from-pink-600 hover:to-red-600 text-white border-white/50'
+                          }`}
+                          style={{ fontFamily: 'Comic Sans MS, cursive' }}
+                        >
+                          {option} 🧮
+                        </Button>
+                      ))}
+                    </div>
                   </div>
                 )}
               </div>
