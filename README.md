@@ -1,30 +1,62 @@
-# Hilarious brain training app
+<img width="3188" height="1202" alt="frame (3)" src="https://github.com/user-attachments/assets/517ad8e9-ad22-457d-9538-a9e62d137cd7" />
 
-*Automatically synced with your [v0.dev](https://v0.dev) deployments*
 
-[![Deployed on Vercel](https://img.shields.io/badge/Deployed%20on-Vercel-black?style=for-the-badge&logo=vercel)](https://vercel.com/stanleicoc707s-projects/v0-hilarious-brain-training-app)
-[![Built with v0](https://img.shields.io/badge/Built%20with-v0.dev-black?style=for-the-badge)](https://v0.dev/chat/projects/ySWMWsqhiez)
+# IQ decreaser 🎯
 
-## Overview
 
-This repository will stay in sync with your deployed chats on [v0.dev](https://v0.dev).
-Any changes you make to your deployed app will be automatically pushed to this repository from [v0.dev](https://v0.dev).
+## Basic Details
+### Team Name: Bca yugam
 
-## Deployment
 
-Your project is live at:
+### Team Members
+- Team Lead: Riswan - majlis arts and science
+- Member 2: Akshay - majlis arts and science
 
-**[https://vercel.com/stanleicoc707s-projects/v0-hilarious-brain-training-app](https://vercel.com/stanleicoc707s-projects/v0-hilarious-brain-training-app)**
 
-## Build your app
+### Project Description
+IQ Decreaser is a brain-training app designed to make you hilariously dumber with every task.
+From clicking buttons you shouldn’t to staring at eyeballs for no reason, it’s proudly pointless.
+Complete absurd challenges, earn useless badges, and watch your IQ drop like it's hot.
 
-Continue building your app on:
+### The Problem (that doesn't exist)
+problems that doesn't really make sense
 
-**[https://v0.dev/chat/projects/ySWMWsqhiez](https://v0.dev/chat/projects/ySWMWsqhiez)**
+### The Solution (that nobody asked for)
+We’re solving it by creating a series of mind-bogglingly pointless tasks designed to reduce your IQ in the most ridiculous ways possible.
 
-## How It Works
+## Technical Details
+### Technologies/Components Used
+For Software:
+- JAVA SCRIPT
+- REACT
+- LOVABLE
 
-1. Create and modify your project using [v0.dev](https://v0.dev)
-2. Deploy your chats from the v0 interface
-3. Changes are automatically pushed to this repository
-4. Vercel deploys the latest version from this repository
+
+### Implementation
+For Software:
+# Installation
+NPM INSTALL
+
+# Run
+
+
+
+
+### Project Demo
+# LINK
+(https://v0.dev/chat/hilarious-brain-training-app-b6FieN4UfZy)
+
+
+# Additional Demos
+[Add any extra demo materials/links]
+
+
+
+
+---
+Made with ❤️ at TinkerHub Useless Projects 
+
+![Static Badge](https://img.shields.io/badge/TinkerHub-24?color=%23000000&link=https%3A%2F%2Fwww.tinkerhub.org%2F)
+![Static Badge](https://img.shields.io/badge/UselessProjects--25-25?link=https%3A%2F%2Fwww.tinkerhub.org%2Fevents%2FQ2Q1TQKX6Q%2FUseless%2520Projects)
+
+
